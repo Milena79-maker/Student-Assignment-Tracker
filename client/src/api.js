@@ -1,15 +1,17 @@
 async function request(path, options = {}) {
-  let response;
+  const token = localStorage.getItem('token')
+  let response
   try {
     response = await fetch(path, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       },
-    });
+    })
   } catch {
-    throw new Error('Cannot reach the server. Check that the app is running.');
+    throw new Error('Cannot reach the server. Check that the API is running.')
   }
 
   const text = await response.text();
@@ -54,5 +56,29 @@ export function setCompleted(id, completed) {
 }
 
 export function deleteAssignment(id) {
-  return request(`/api/assignments/${id}`, { method: 'DELETE' });
+  return request(`/api/assignments/${id}`, { method: 'DELETE' })
+}
+
+export function getUsers() {
+  return request('/api/users')
+}
+
+export function signUp(body) {
+  return request('/api/users', { method: 'POST', body: JSON.stringify(body) })
+}
+
+export function signIn(body) {
+  return request('/api/users/login', { method: 'POST', body: JSON.stringify(body) })
+}
+
+export function getMe() {
+  return request('/api/users/me')
+}
+
+export function updateMe(body) {
+  return request('/api/users/me', { method: 'PUT', body: JSON.stringify(body) })
+}
+
+export function deleteMe() {
+  return request('/api/users/me', { method: 'DELETE' })
 }

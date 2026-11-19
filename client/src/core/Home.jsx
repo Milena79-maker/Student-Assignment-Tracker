@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAssignments } from '../api.js';
+import { useAuth } from '../auth.jsx';
 import { STATUS_LABEL, dueStatus, formatDue } from '../dates.js';
 
 export default function Home() {
+  const { user } = useAuth();
   const [assignments, setAssignments] = useState(null);
   const [error, setError] = useState('');
 
@@ -35,14 +37,23 @@ export default function Home() {
   return (
     <div>
       <section className="hero">
-        <p className="eyebrow">Coursework</p>
+        <img className="hero-logo" src="/logo.webp" alt="Student Assignment Tracker. Plan, track, complete." />
         <h1>Keep every assignment in one place.</h1>
         <p className="lede">
-          Add work, set a due date, and mark it complete when you finish.
+          {user
+            ? `Signed in as ${user.name}. Add work, set a due date, and mark it complete when you finish.`
+            : 'Add work, set a due date, and mark it complete when you finish. Sign up or sign in to change the list.'}
         </p>
         <div className="hero-actions">
           <Link className="button" to="/assignments">View assignments</Link>
-          <Link className="button secondary" to="/assignments/new">Add assignment</Link>
+          {user ? (
+            <Link className="button secondary" to="/assignments/new">Add assignment</Link>
+          ) : (
+            <>
+              <Link className="button secondary" to="/sign-up">Sign up</Link>
+              <Link className="button secondary" to="/sign-in">Sign in</Link>
+            </>
+          )}
         </div>
       </section>
 

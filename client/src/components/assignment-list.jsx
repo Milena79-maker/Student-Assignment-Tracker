@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { deleteAssignment, getAssignments, setCompleted, updateAssignment } from '../api.js';
+import { useAuth } from '../auth.jsx';
 import EditDialog from './edit-dialog.jsx';
 import { STATUS_LABEL, dueStatus, formatDue } from '../dates.js';
 
@@ -11,6 +12,7 @@ const FILTERS = [
 ];
 
 export default function Assignments() {
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [assignments, setAssignments] = useState(null);
@@ -116,7 +118,9 @@ export default function Assignments() {
       <p className="eyebrow">Your list</p>
       <div className="section-head">
         <h1>Assignments</h1>
-        <Link className="button" to="/assignments/new">Add assignment</Link>
+        <Link className="button" to={user ? '/assignments/new' : '/sign-in'}>
+          {user ? 'Add assignment' : 'Sign in to add'}
+        </Link>
       </div>
 
       {notice && (
@@ -154,7 +158,7 @@ export default function Assignments() {
       {visible.length === 0 ? (
         <div className="empty">
           <p>No assignments here yet.</p>
-          <p><Link to="/assignments/new">Add an assignment</Link></p>
+          <p><Link to={user ? '/assignments/new' : '/sign-in'}>Add an assignment</Link></p>
         </div>
       ) : (
         <div className="list">
@@ -180,6 +184,7 @@ export default function Assignments() {
                   </div>
                 </div>
                 {assignment.description && <p className="description">{assignment.description}</p>}
+                {user ? (
                 <div className="actions">
                   <button
                     type="button"
@@ -210,6 +215,9 @@ export default function Assignments() {
                     Delete
                   </button>
                 </div>
+                ) : (
+                  <p className="meta"><Link to="/sign-in">Sign in to update this assignment</Link></p>
+                )}
               </article>
             );
           })}
