@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Assignment Tracker</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap");
+:root { font-family: "DM Sans", Arial, sans-serif; color: rgb(36, 33, 59); background: rgb(247, 247, 252); font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0px; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 260px; background: rgb(255, 255, 255); border-right: 1px solid rgb(234, 233, 244); padding: 31px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
+.brand { display: flex; gap: 11px; align-items: center; padding: 3px 10px 44px; }
+.brand-icon { background: rgb(112, 82, 198); color: white; border-radius: 13px; padding: 9px; display: flex; }
+.brand strong { display: block; font-family: Outfit, sans-serif; font-size: 18px; }
+.brand small { display: block; color: rgb(149, 145, 168); font-size: 11px; margin-top: 3px; }
+.nav-label { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: rgb(170, 167, 183); margin: 0px 13px 15px; }
+.nav { width: 100%; display: flex; align-items: center; gap: 13px; border: 0px; background: transparent; color: rgb(119, 116, 138); text-align: left; padding: 15px 16px; border-radius: 12px; font-weight: 700; margin: 3px 0px; }
+.nav:hover, .nav.active { background: rgb(240, 234, 251); color: rgb(104, 70, 195); }
+.sidebar-footer { margin-top: auto; background: rgb(246, 242, 255); border-radius: 15px; padding: 17px; display: flex; align-items: center; gap: 11px; color: rgb(106, 74, 192); }
+.sidebar-footer strong, .sidebar-footer span { display: block; }
+.sidebar-footer strong { font-size: 12px; }
+.sidebar-footer span { font-size: 11px; margin-top: 5px; color: rgb(138, 128, 164); }
+.main { flex: 1 1 0%; min-width: 0px; }
+.topbar { height: 80px; background: rgb(255, 255, 255); border-bottom: 1px solid rgb(235, 234, 243); display: flex; justify-content: space-between; align-items: center; padding: 0px 45px; font-weight: 700; color: rgb(88, 81, 108); }
+.top-chip { display: flex; gap: 8px; align-items: center; color: rgb(139, 131, 160); font-size: 13px; }
+.content { max-width: 1210px; padding: 42px 45px 80px; margin: auto; }
+.hero { border-radius: 23px; background: linear-gradient(110deg, rgb(107, 75, 193), rgb(149, 117, 224)); color: rgb(255, 255, 255); min-height: 285px; padding: 43px 53px; display: flex; align-items: center; justify-content: space-between; overflow: hidden; }
+.eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 2px; color: rgb(134, 104, 210); }
+.hero .eyebrow { color: rgb(225, 213, 255); }
+.hero h1, .page-heading h1 { font-family: Outfit, sans-serif; font-size: 39px; line-height: 1.14; margin: 15px 0px; }
+.hero h1 em { font-style: normal; color: rgb(245, 220, 255); }
+.hero p { max-width: 490px; line-height: 1.7; color: rgb(233, 224, 255); font-size: 14px; margin-bottom: 23px; }
+.hero .primary { background: white; color: rgb(107, 75, 193); }
+.hero-art { position: relative; display: grid; place-items: center; width: 200px; height: 200px; border-radius: 50%; background: rgba(255, 255, 255, 0.125); color: rgb(255, 255, 255); transform: rotate(-10deg); }
+.art-check { position: absolute; right: 0px; bottom: 5px; background: rgb(255, 255, 255); color: rgb(81, 182, 138); padding: 13px; border-radius: 18px; box-shadow: rgba(73, 51, 140, 0.314) 0px 8px 25px; }
+.primary { background: rgb(112, 81, 197); border: 0px; color: white; border-radius: 10px; padding: 13px 20px; font-weight: 800; display: inline-flex; gap: 12px; align-items: center; justify-content: center; }
+.primary:hover { background: rgb(90, 60, 171); }
+.primary:disabled { opacity: 0.65; }
+.section-heading { display: flex; justify-content: space-between; align-items: center; margin: 34px 0px 18px; }
+.section-heading h2, .form-header h2 { font-family: Outfit, sans-serif; font-size: 23px; margin: 0px; }
+.section-heading p { color: rgb(145, 140, 160); font-size: 13px; margin: 5px 0px; }
+.text-button { border: 0px; background: transparent; color: rgb(112, 81, 197); display: flex; align-items: center; gap: 8px; font-weight: 800; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0px, 1fr)); gap: 16px; }
+.stat { background: rgb(255, 255, 255); border: 1px solid rgb(239, 237, 246); border-radius: 15px; padding: 22px; display: flex; align-items: center; gap: 16px; }
+.stat-icon { width: 47px; height: 47px; border-radius: 12px; display: grid; place-items: center; }
+.purple { background: rgb(240, 234, 250); color: rgb(128, 83, 200); }
+.blue { background: rgb(233, 241, 255); color: rgb(88, 137, 227); }
+.green { background: rgb(232, 248, 238); color: rgb(66, 177, 124); }
+.orange { background: rgb(255, 240, 230); color: rgb(230, 155, 77); }
+.stat span { display: block; color: rgb(139, 135, 153); font-size: 12px; }
+.stat strong { display: block; font-size: 27px; font-family: Outfit, sans-serif; margin-top: 3px; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); gap: 17px; }
+.assignment-card { background: rgb(255, 255, 255); border: 1px solid rgb(234, 232, 241); border-radius: 17px; padding: 24px; box-shadow: rgba(45, 28, 84, 0.024) 0px 6px 20px; }
+.assignment-card.done { opacity: 0.76; }
+.card-top, .card-bottom { display: flex; align-items: center; justify-content: space-between; }
+.priority, .status { font-size: 11px; font-weight: 800; border-radius: 20px; padding: 6px 10px; }
+.priority.high { background: rgb(255, 232, 232); color: rgb(217, 83, 101); }
+.priority.medium { background: rgb(255, 243, 223); color: rgb(199, 140, 40); }
+.priority.low { background: rgb(231, 245, 238); color: rgb(60, 170, 120); }
+.status { background: rgb(241, 237, 250); color: rgb(124, 91, 196); }
+.status.complete { background: rgb(230, 247, 238); color: rgb(54, 156, 106); }
+.status.late { background: rgb(255, 240, 232); color: rgb(220, 125, 72); }
+.assignment-card h3 { font-family: Outfit, sans-serif; margin: 21px 0px 6px; font-size: 20px; }
+.course { font-size: 13px; font-weight: 700; color: rgb(121, 89, 196); }
+.description { font-size: 13px; line-height: 1.6; color: rgb(119, 113, 133); min-height: 40px; overflow-wrap: anywhere; }
+.card-bottom { border-top: 1px solid rgb(240, 237, 245); margin-top: 20px; padding-top: 15px; color: rgb(138, 132, 150); font-size: 12px; }
+.card-bottom > span { display: flex; align-items: center; gap: 7px; }
+.card-actions { display: flex; gap: 5px; }
+.card-actions button { background: rgb(245, 242, 251); color: rgb(119, 89, 189); border: 0px; border-radius: 7px; padding: 8px; display: grid; place-items: center; }
+.card-actions button:hover { background: rgb(231, 220, 250); }
+.page-heading { display: flex; justify-content: space-between; align-items: center; margin: 12px 0px 30px; }
+.page-heading h1 { font-size: 35px; margin: 10px 0px; }
+.page-heading p { color: rgb(139, 133, 155); font-size: 14px; margin: 0px; }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 22px; }
+.search { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid rgb(231, 227, 239); border-radius: 10px; padding: 0px 15px; color: rgb(155, 147, 172); flex: 1 1 0%; max-width: 380px; }
+.search input { border: 0px; outline: 0px; padding: 14px 0px; width: 100%; background: transparent; font-size: 13px; }
+.filters { display: flex; gap: 7px; flex-wrap: wrap; }
+.filter { border: 1px solid rgb(231, 226, 240); background: white; border-radius: 9px; padding: 11px 14px; color: rgb(131, 125, 146); font-size: 12px; font-weight: 700; }
+.filter.selected { background: rgb(112, 81, 197); color: rgb(255, 255, 255); border-color: rgb(112, 81, 197); }
+.assignment-form { max-width: 780px; background: rgb(255, 255, 255); border: 1px solid rgb(236, 233, 243); border-radius: 18px; padding: 30px 36px; box-shadow: rgba(45, 28, 84, 0.024) 0px 6px 20px; }
+.form-header { display: flex; align-items: center; gap: 12px; color: rgb(108, 74, 196); padding-bottom: 24px; border-bottom: 1px solid rgb(238, 234, 243); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 23px; margin-top: 26px; }
+.form-grid label { display: flex; flex-direction: column; gap: 9px; font-size: 13px; font-weight: 800; }
+.form-grid label span { color: rgb(212, 100, 100); }
+.form-grid label .optional { font-weight: 500; color: rgb(160, 154, 170); }
+.form-grid .full { grid-column: 1 / -1; }
+.form-grid input, .form-grid textarea, .form-grid select { width: 100%; border: 1px solid rgb(221, 216, 231); border-radius: 9px; padding: 13px 14px; outline-color: rgb(147, 121, 219); background: rgb(255, 255, 255); color: rgb(57, 52, 74); font-size: 14px; }
+.form-grid textarea { resize: vertical; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 29px; }
+.secondary { border: 1px solid rgb(224, 219, 233); background: rgb(255, 255, 255); border-radius: 9px; padding: 12px 20px; color: rgb(119, 112, 130); font-weight: 700; }
+.alert { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-radius: 10px; margin-bottom: 22px; font-size: 13px; }
+.alert button { border: 0px; background: transparent; font-size: 21px; }
+.alert.error { background: rgb(255, 240, 240); color: rgb(180, 62, 81); }
+.alert.success { background: rgb(233, 249, 239); color: rgb(38, 123, 81); }
+.empty { background: rgb(255, 255, 255); border: 1px dashed rgb(216, 208, 232); border-radius: 18px; padding: 55px 20px; text-align: center; color: rgb(118, 86, 196); }
+.empty h3 { color: rgb(55, 48, 69); margin-bottom: 7px; }
+.empty p { color: rgb(145, 138, 157); font-size: 14px; margin-bottom: 20px; }
+@media (max-width: 1050px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-art { width: 130px; height: 130px; }
+  .content { padding: 30px; }
+}
+@media (max-width: 750px) {
+  .app { display: block; }
+  .sidebar { width: 100%; padding: 12px; display: block; }
+  .brand { padding: 5px 10px 15px; }
+  .sidebar nav { display: flex; gap: 5px; }
+  .nav { font-size: 12px; padding: 10px 8px; justify-content: center; }
+  .nav-label, .sidebar-footer { display: none; }
+  .topbar { height: 56px; padding: 0px 18px; }
+  .content { padding: 20px 15px; }
+  .hero { padding: 29px; min-height: 240px; }
+  .hero h1 { font-size: 30px; }
+  .hero-art { display: none; }
+  .cards { grid-template-columns: 1fr; }
+  .toolbar, .page-heading { align-items: stretch; flex-direction: column; }
+  .search { max-width: none; }
+  .assignment-form { padding: 22px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .stats { gap: 10px; }
+  .stat { padding: 14px; gap: 8px; }
+  .stat strong { font-size: 22px; }
+  .stat-icon { width: 36px; height: 36px; }
+  .stat span { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+<div id="root"><div class="app"><aside class="sidebar"><div class="brand"><div class="brand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg></div><div><strong>Student Tracker</strong><small>Stay on top of it all</small></div></div><p class="nav-label">WORKSPACE</p><nav aria-label="Main navigation"><button class="nav active"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg> Home</button><button class="nav"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg> Assignments</button><button class="nav"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path><path d="M12 8v8"></path></svg> Add Assignment</button></nav><div class="sidebar-footer"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg><div><strong>One step at a time</strong><span>Plan • Track • Complete</span></div></div></aside><main class="main"><header class="topbar"><span>Student Assignment Tracker</span><span class="top-chip"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg> Thu, Nov 19</span></header><div class="content"><section class="hero"><div><span class="eyebrow">YOUR STUDENT DASHBOARD</span><h1>Make every deadline<br><em>feel manageable.</em></h1><p>Organize your coursework, track progress, and celebrate every assignment you finish.</p><button class="primary">+ Add Assignment <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></div><div class="hero-art"><svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg><div class="art-check"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></div></div></section><div class="section-heading"><div><h2>Overview</h2><p>Your coursework at a glance</p></div></div><div class="stats"><div class="stat"><div class="stat-icon purple"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4"></path><path d="M12 16h4"></path><path d="M8 11h.01"></path><path d="M8 16h.01"></path></svg></div><div><span>Total Assignments</span><strong>5</strong></div></div><div class="stat"><div class="stat-icon blue"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg></div><div><span>In Progress</span><strong>4</strong></div></div><div class="stat"><div class="stat-icon green"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></div><div><span>Completed</span><strong>1</strong></div></div><div class="stat"><div class="stat-icon orange"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg></div><div><span>Overdue</span><strong>0</strong></div></div></div><div class="section-heading"><div><h2>Upcoming assignments</h2><p>Focus on what comes next</p></div><button class="text-button">View all <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button></div><div class="cards"><article class="assignment-card "><div class="card-top"><span class="priority high">high priority</span><span class="status ">Pending</span></div><h3>Industrial Revolution essay</h3><p class="course">HIST 210</p><p class="description">Four pages on how factory work changed city life. Cite two primary sources.</p><div class="card-bottom"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg> Invalid Date</span><div class="card-actions"><button title="Mark complete" aria-label="Mark complete"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></button><button title="Edit assignment" aria-label="Edit assignment"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg></button><button title="Delete assignment" aria-label="Delete assignment"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></div></article><article class="assignment-card "><div class="card-top"><span class="priority medium">medium priority</span><span class="status ">Pending</span></div><h3>Problem set 6</h3><p class="course">MATH 141</p><p class="description">Integrals, sections 5.3 through 5.5. Show each step.</p><div class="card-bottom"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg> Invalid Date</span><div class="card-actions"><button title="Mark complete" aria-label="Mark complete"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></button><button title="Edit assignment" aria-label="Edit assignment"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg></button><button title="Delete assignment" aria-label="Delete assignment"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></div></article><article class="assignment-card "><div class="card-top"><span class="priority high">high priority</span><span class="status ">Pending</span></div><h3>Lab report: osmosis</h3><p class="course">BIO 110</p><p class="description">Include the data table, a graph, and a short conclusion.</p><div class="card-bottom"><span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg> Invalid Date</span><div class="card-actions"><button title="Mark complete" aria-label="Mark complete"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg></button><button title="Edit assignment" aria-label="Edit assignment"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg></button><button title="Delete assignment" aria-label="Delete assignment"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg></button></div></div></article></div></div></main></div></div>
+</body>
+</html>

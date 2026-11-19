@@ -12,24 +12,20 @@ vi.stubGlobal('fetch', vi.fn(() =>
 ));
 
 describe('Student Assignment Tracker', () => {
-  it('opens the Add Assignment form when clicked', async () => {
+it('asks students to sign in before adding an assignment', () => {
     render(<App />);
 
     const addButton = screen.getAllByRole('button', {
-  name: /add assignment/i
+      name: /add assignment/i
 })[0];
 
     fireEvent.click(addButton);
 
     expect(
       screen.getByRole('heading', {
-        name: 'Add Assignment'
+        name: 'Sign in'
       })
     ).toBeTruthy();
-
-    expect(
-      screen.getByPlaceholderText('e.g. React portfolio project')
-   ).toBeTruthy();
   });
   it('displays the Home Dashboard', () => {
   render(<App />);

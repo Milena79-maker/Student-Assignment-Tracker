@@ -3,13 +3,17 @@
 COMP229 Web Application Development group project — MERN Stack (MongoDB, Express, React, Node.js).
 
 ## Features
-- Home dashboard with total, pending, completed, and overdue assignment counts
+- Home page with the site name, team logo, assignment list, and Sign Up / Sign In
+- Navigation highlights the current page
+- Signed out: Home, Assignments, Users, Sign Up, Sign In
+- Signed in: Home, Assignments, Add Assignment, Users, My Profile, Sign Out
 - Assignments page with search and status filters
-- Add Assignment page with title, course, due date, priority, and description
 - Create, read, edit, and delete assignments stored in MongoDB
+- Create, read, update, and delete user accounts
 - Mark assignments completed or pending
 - Validation, confirmation before deletion, and success/error messages
 - Responsive design for desktop and mobile
+- Interface copy is in English
 
 ## Requirements
 - Node.js 20+ and npm
@@ -33,6 +37,14 @@ The frontend runs on port 5173 and the backend on port 5000. The Vite dev server
 - `PUT /api/assignments/:id` — edit assignment
 - `PATCH /api/assignments/:id/complete` — set completion status
 - `DELETE /api/assignments/:id` — delete assignment
+- `GET /api/users` — list users
+- `POST /api/users` — sign up
+- `POST /api/users/login` — sign in and receive a token
+- `GET /api/users/me` — current profile
+- `PUT /api/users/me` — update the current profile
+- `DELETE /api/users/me` — delete the current account
+
+Creating, editing, completing, or deleting an assignment requires `Authorization: Bearer <token>`. Reading assignments and the user list does not.
 
 Example POST JSON:
 ```json
@@ -50,8 +62,7 @@ Example POST JSON:
 ## Still to complete
 
 ### Application
-- Sign-up, sign-in, Users, and My Profile are in the React app. `npm run dev` starts `server/index.js`, which serves the assignment API only. Those account routes still need to be mounted on that server before the screens work end to end.
-- Vitest is installed and `client/src/App.test.jsx` is a first test. The suite still needs to match the current pages, and the results need a screenshot for the report.
+- Vitest is installed and `client/src/App.test.jsx` covers the home page, the assignments page, and the sign-in prompt. The results still need a screenshot for the report.
 
 ### Submission
 - Push commits from every group member to the GitHub repository.
