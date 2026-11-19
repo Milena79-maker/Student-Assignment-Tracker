@@ -47,5 +47,25 @@ Example POST JSON:
 5. Delete it and confirm it disappears.
 6. Confirm MongoDB has the `assignments` collection in the `student_assignment_tracker` database.
 
+## Still to complete
+
+### Application
+- Sign-up, sign-in, Users, and My Profile are in the React app. `npm run dev` starts `server/index.js`, which serves the assignment API only. Those account routes still need to be mounted on that server before the screens work end to end.
+- Vitest is installed and `client/src/App.test.jsx` is a first test. The suite still needs to match the current pages, and the results need a screenshot for the report.
+
+### Submission
+- Push commits from every group member to the GitHub repository.
+- Keep the agile board (Jira or Trello) up to date, then export a PDF of the backlog.
+- Record a 5 to 10 minute video. Slide 1: team name and logo, each member's full name and student number, course code and name, and project type. Slide 2: a recent photo of each member (not an avatar), with name and role. Then show each page and the code of the main functions.
+- Add a Cypress end-to-end test, with the recording, the test code, and a screenshot of the results.
+- Measure performance and note what was improved.
+- Deploy the app (MongoDB Atlas or Firebase) and record the public URL.
+- Show CI/CD: a GitHub branch, a small visible change, a merge into `main`, and before-and-after screenshots of the deployed site.
+- Write EDD v.3 as a PDF: logo, mockups, screenshots, navigation, and authentication.
+- Submit one ZIP archive (not RAR) with the EDD PDF, the GitHub link, the deployed link, the backlog PDF, the video link, and the test and CI/CD evidence.
+
 ## Important notes
-This is a complete starter implementation of the features described for the Student Assignment Tracker concept. It has not been run against your local MongoDB or tested in your browser. Your instructor's full project rubric, authentication requirements, deployment requirements, and group-specific rules should be checked before final submission. The application does not include user accounts or multi-user access control.
+- Start MongoDB before `npm run dev`. Assignments are stored in the `student_assignment_tracker` database on the local machine.
+- Keep `server/.env` out of Git. Each machine copies `server/.env.example` to `server/.env`.
+- The interface is http://localhost:5173. The API is http://localhost:5000.
+- Work that is not in this repository yet is listed under Still to complete.
