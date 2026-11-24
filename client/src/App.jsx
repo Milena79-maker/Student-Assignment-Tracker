@@ -67,6 +67,8 @@ function Tracker() {
   const [editing, setEditing] = useState(null);
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
+  const [priorityFilter, setPriorityFilter] = useState('All');
+  const [sortBy, setSortBy] = useState('due-asc');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState('');
@@ -104,10 +106,49 @@ function Tracker() {
     overdue: items.filter(isOverdue).length,
   }), [items]);
 
-  const visible = useMemo(() => items.filter((x) => {
-    const matchesFilter = filter === 'All' || (filter === 'Completed' && x.completed) || (filter === 'Pending' && !x.completed) || (filter === 'Overdue' && isOverdue(x));
-    return matchesFilter && `${x.title} ${x.course} ${x.description}`.toLowerCase().includes(search.toLowerCase());
-  }), [items, filter, search]);
+  const visible = useMemo(() => {
+  const filtered = items.filter((x) => {
+    const matchesFilter = filter === 'All' ||
+      (filter === 'Completed' && x.completed) ||
+      (filter === 'Pending' && !x.completed) ||
+      (filter === 'Overdue' && isOverdue(x));
+
+    const matchesPriority = priorityFilter === 'All' ||
+      priorityLabel(x.priority) === priorityFilter;
+
+    const matchesSearch = `${x.title} ${x.course} ${x.description}`
+      .toLowerCase().includes(search.toLowerCase());
+
+    return matchesFilter && matchesPriority && matchesSearch;
+  });
+
+  const priorityOrder = {
+    High: 3,
+    Medium: 2,
+    Low: 1
+  };
+
+  return filtered.sort((a, b) => {
+    if (sortBy === 'due-asc') {
+      return new Date(a.dueDate) - new Date(b.dueDate);
+    }
+
+    if (sortBy === 'due-desc') {
+      return new Date(b.dueDate) - new Date(a.dueDate);
+    }
+
+    if (sortBy === 'priority') {
+      return priorityOrder[priorityLabel(b.priority)] -
+        priorityOrder[priorityLabel(a.priority)];
+    }
+
+    if (sortBy === 'title') {
+      return a.title.localeCompare(b.title);
+    }
+
+    return 0;
+    });
+  }, [items, filter, search, priorityFilter, sortBy]);
 
   function navigate(to) { setPage(to); setNotice(''); setError(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
@@ -279,7 +320,63 @@ function Tracker() {
           {loading ? <p>Loading assignments...</p> : items.filter((x) => !x.completed).length ? <div className="cards">{items.filter((x) => !x.completed).slice(0, 3).map((x) => <AssignmentCard key={x._id} item={x} signedIn={Boolean(user)} toggle={toggle} edit={startEdit} remove={remove} onSignIn={() => requireSignIn('Sign in to add or update assignments.')}/>)}</div> : <Empty addNew={addNew}/>}
         </>}
         {page === 'assignments' && <><div className="page-heading"><div><span className="eyebrow">YOUR WORKSPACE</span><h1>My Assignments</h1><p>Everything you need to stay organized.</p></div><button className="primary" onClick={addNew}>+ Add Assignment</button></div>
-          <div className="toolbar"><div className="search"><Search size={18}/><input aria-label="Search assignments" placeholder="Search by title or course..." value={search} onChange={(e) => setSearch(e.target.value)}/></div><div className="filters">{['All','Pending','Completed','Overdue'].map((f) => <button key={f} className={filter === f ? 'filter selected' : 'filter'} onClick={() => setFilter(f)}>{f}</button>)}</div></div>
+          <div className="toolbar assignment-toolbar">
+  <div className="search">
+    <Search size={18}/>
+    <input
+      aria-label="Search assignments"
+      placeholder="Search by title or course..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+  </div>
+
+  <div className="toolbar-controls">
+    <div className="filter-group">
+      <label>Status</label>
+      <div className="filters">
+        {['All', 'Pending', 'Completed', 'Overdue'].map((f) => (
+          <button
+            key={f}
+            className={filter === f ? 'filter selected' : 'filter'}
+            onClick={() => setFilter(f)}
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+    </div>
+
+        <div className="filter-group">
+          <label htmlFor="priority-filter">Priority</label>
+          <select
+            id="priority-filter"
+            className="filter"
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
+          >
+            <option value="All">All priorities</option>
+            <option value="High">High priority</option>
+            <option value="Medium">Medium priority</option>
+            <option value="Low">Low priority</option>
+          </select>
+        </div>
+        <div className="filter-group">
+          <label htmlFor="sort-by">Sort by</label>
+          <select
+            id="sort-by"
+            className="filter"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="due-asc">Due date: earliest first</option>
+            <option value="due-desc">Due date: latest first</option>
+            <option value="priority">Priority: high to low</option>
+            <option value="title">Title: A–Z</option>
+          </select>
+        </div>
+      </div>
+    </div>
           {loading ? <p>Loading assignments...</p> : visible.length ? <div className="cards">{visible.map((x) => <AssignmentCard key={x._id} item={x} signedIn={Boolean(user)} toggle={toggle} edit={startEdit} remove={remove} onSignIn={() => requireSignIn('Sign in to add or update assignments.')}/>)}</div> : <Empty addNew={addNew} text={items.length ? 'No assignments match your filters.' : undefined}/>}
         </>}
         {page === 'add' && user && <><div className="page-heading"><div><span className="eyebrow">STAY ORGANIZED</span><h1>{editing ? 'Edit Assignment' : 'Add Assignment'}</h1><p>{editing ? 'Update the details of your coursework.' : 'Add your next task and stay ahead of the deadline.'}</p></div></div>
