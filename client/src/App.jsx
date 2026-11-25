@@ -69,6 +69,17 @@ function Tracker() {
   const [search, setSearch] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('All');
   const [sortBy, setSortBy] = useState('due-asc');
+  const resetFilters = () => {
+  setFilter('All');
+  setSearch('');
+  setPriorityFilter('All');
+  setSortBy('due-asc');
+  };
+  const hasActiveFilters =
+  filter !== 'All' ||
+  search.trim() !== '' ||
+  priorityFilter !== 'All' ||
+  sortBy !== 'due-asc';
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState('');
@@ -117,7 +128,7 @@ function Tracker() {
       priorityLabel(x.priority) === priorityFilter;
 
     const matchesSearch = `${x.title} ${x.course} ${x.description}`
-      .toLowerCase().includes(search.toLowerCase());
+      .toLowerCase().includes(search.trim().toLowerCase());
 
     return matchesFilter && matchesPriority && matchesSearch;
   });
@@ -325,7 +336,7 @@ function Tracker() {
     <Search size={18}/>
     <input
       aria-label="Search assignments"
-      placeholder="Search by title or course..."
+      placeholder="Search by title, course or description..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
     />
@@ -372,12 +383,38 @@ function Tracker() {
             <option value="due-asc">Due date: earliest first</option>
             <option value="due-desc">Due date: latest first</option>
             <option value="priority">Priority: high to low</option>
-            <option value="title">Title: A–Z</option>
+                        <option value="title">Title: A–Z</option>
           </select>
         </div>
       </div>
+
+      <div className="toolbar-summary">
+        <p className="results-count">
+          Showing {visible.length} of {items.length} assignments
+        </p>
+
+        <button
+          type="button"
+          className="reset-filters"
+          onClick={resetFilters}
+          disabled={!hasActiveFilters}
+        >
+          Reset Filters
+        </button>
+      </div>
     </div>
-          {loading ? <p>Loading assignments...</p> : visible.length ? <div className="cards">{visible.map((x) => <AssignmentCard key={x._id} item={x} signedIn={Boolean(user)} toggle={toggle} edit={startEdit} remove={remove} onSignIn={() => requireSignIn('Sign in to add or update assignments.')}/>)}</div> : <Empty addNew={addNew} text={items.length ? 'No assignments match your filters.' : undefined}/>}
+          {loading ? <p>Loading assignments...</p> : visible.length ? <div className="cards">{visible.map((x) => <AssignmentCard key={x._id} item={x} signedIn={Boolean(user)} toggle={toggle} edit={startEdit} remove={remove} onSignIn={() => requireSignIn('Sign in to add or update assignments.')}/>)}</div> : (items.length > 0 ? (
+            <div className="empty">
+              <Search size={42}/>
+              <h3>No matching assignments</h3>
+              <p>Try changing your search or resetting your filters.</p>
+              <button className="primary" onClick={resetFilters}>
+                Reset Filters
+              </button>
+            </div>
+          ) : (
+            <Empty addNew={addNew}/>
+          ))}
         </>}
         {page === 'add' && user && <><div className="page-heading"><div><span className="eyebrow">STAY ORGANIZED</span><h1>{editing ? 'Edit Assignment' : 'Add Assignment'}</h1><p>{editing ? 'Update the details of your coursework.' : 'Add your next task and stay ahead of the deadline.'}</p></div></div>
           <form className="assignment-form" onSubmit={submit}><div className="form-header"><ClipboardList size={22}/><h2>Assignment details</h2></div><div className="form-grid"><label className="full">Assignment Title <span>*</span><input required maxLength="120" placeholder="e.g. React portfolio project" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })}/></label><label>Course <span>*</span><input required maxLength="80" placeholder="e.g. COMP229" value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })}/></label><label>Due Date <span>*</span><input required type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })}/></label><label className="full">Priority <select value={form.priority} onChange={(e) => setForm({ ...form, priority: e.target.value })}><option>Low</option><option>Medium</option><option>High</option></select></label><label className="full">Description <span className="optional">(optional)</span><textarea rows="5" maxLength="1000" placeholder="What do you need to do?" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })}/></label></div><div className="form-actions"><button type="button" className="secondary" onClick={() => navigate('assignments')}>Cancel</button><button className="primary" disabled={saving} type="submit">{saving ? 'Saving...' : editing ? 'Save Changes' : 'Add Assignment'}</button></div></form>
