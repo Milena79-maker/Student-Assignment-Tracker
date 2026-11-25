@@ -53,3 +53,40 @@
         align-items: stretch;
     }
 }
+/* Assignment filter enhancements */
+.toolbar-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid #eae8f1;
+    padding-top: 14px;
+}
+
+.results-count {
+    margin: 0;
+    font-size: 13px;
+    color: #837d92;
+}
+
+.reset-filters {
+    background: white;
+    color: #7051c5;
+    border: 1px solid #7051c5;
+    border-radius: 9px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.reset-filters:hover:not(:disabled) {
+    background: #7051c5;
+    color: white;
+}
+
+.reset-filters:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
