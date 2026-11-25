@@ -90,3 +90,153 @@
     opacity: 0.45;
     cursor: not-allowed;
 }
+
+/* Responsive UI improvements */
+
+.sidebar-footer div,
+.assignment-card,
+.form-grid label,
+.hero > div:first-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.nav svg,
+.stat-icon,
+.top-chip svg {
+    flex-shrink: 0;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #7051c5;
+    outline-offset: 3px;
+}
+
+@media (max-width: 750px) {
+    .sidebar {
+        border-right: none;
+        border-bottom: 1px solid #eae9f4;
+    }
+
+    .sidebar nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .sidebar .nav {
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        justify-content: flex-start;
+        padding: 10px 12px;
+        margin: 0;
+        gap: 8px;
+    }
+
+    .topbar {
+        height: auto;
+        min-height: 56px;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 14px 16px;
+    }
+
+    .hero {
+        padding: 24px;
+    }
+
+    .hero-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .hero-actions .primary {
+        grid-column: 1 / -1;
+    }
+
+    .hero-actions button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .section-heading,
+    .card-top,
+    .card-bottom {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .form-grid input,
+    .form-grid select,
+    .form-grid textarea {
+        min-width: 0;
+        font-size: 16px;
+    }
+
+    .form-actions {
+        flex-wrap: wrap;
+    }
+
+    .form-actions button {
+        flex: 1 1 120px;
+        min-height: 44px;
+    }
+
+    .filter-group select {
+        width: 100%;
+    }
+
+    .card-actions button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .search input {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 16px 12px 32px;
+    }
+
+    .hero {
+        padding: 20px;
+    }
+
+    .hero h1,
+    .page-heading h1 {
+        font-size: 28px;
+    }
+
+    .hero-logo {
+        width: 110px;
+    }
+
+    .stats {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .assignment-card,
+    .assignment-form {
+        padding: 18px;
+    }
+
+    .assignment-toolbar {
+        padding: 12px;
+    }
+
+    .empty {
+        padding: 30px 16px;
+    }
+}
