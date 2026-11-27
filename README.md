@@ -29,6 +29,20 @@ COMP229 Web Application Development group project — MERN Stack (MongoDB, Expre
 
 The frontend runs on port 5173 and the backend on port 5000. The Vite dev server proxies `/api` requests to Express.
 
+## Deploy on Render
+
+One web service serves the React build and the API, the same way as the course portfolio.
+
+- Build command: `npm run render-build`
+- Start command: `npm start`
+- Environment variables: `MONGODB_URI` (MongoDB Atlas) and `JWT_SECRET`
+- Do not set `PORT`. Render assigns it.
+- `NODE_ENV` is `production` and Node is 22.
+
+`render.yaml` at the repository root defines this service. After the Render service is connected to this GitHub repository, a push to `master` starts a new deploy.
+
+`https://YOUR-SERVICE.onrender.com/api/health` returns `{ "status": "ok" }`.
+
 ## API
 - `GET /api/health` — server health
 - `GET /api/assignments` — list assignments
@@ -70,7 +84,7 @@ Example POST JSON:
 - Record a 5 to 10 minute video. Slide 1: team name and logo, each member's full name and student number, course code and name, and project type. Slide 2: a recent photo of each member (not an avatar), with name and role. Then show each page and the code of the main functions.
 - Add a Cypress end-to-end test, with the recording, the test code, and a screenshot of the results.
 - Measure performance and note what was improved.
-- Deploy the app (MongoDB Atlas or Firebase) and record the public URL.
+- Deploy on Render with MongoDB Atlas, then record the public URL. `MONGODB_URI` and `JWT_SECRET` are set in the Render dashboard, not in Git.
 - Show CI/CD: a GitHub branch, a small visible change, a merge into `main`, and before-and-after screenshots of the deployed site.
 - Write EDD v.3 as a PDF: logo, mockups, screenshots, navigation, and authentication.
 - Submit one ZIP archive (not RAR) with the EDD PDF, the GitHub link, the deployed link, the backlog PDF, the video link, and the test and CI/CD evidence.
